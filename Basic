@@ -1,0 +1,41 @@
+#Importar o modulo Office 365
+
+Import-Module ExchangeOnlineManagement
+
+#Conectar ao exchange
+
+Connect-ExchangeOnline -UserPrincipalName contadocliente@cliente.com
+
+Set-executionpolicy unrestricted -Force 
+
+#Instalar o Modulo do Msonline
+
+Install-Module -Name MSOnline 
+
+#Instalar o modudlo do ExchangeOnline
+
+Install-module ExchangeOnlineManagement
+ 
+#Conectar o usuário
+
+connect-msolservice
+ 
+#Criar um novo domínio no tenant
+ 
+New-MsolDomain -Name "domain.com" 
+ 
+#Verificar o DNS do domínio, no caso a baixo foi utilizad o o TXT
+ 
+Get-MsolDomainVerificationDns –DomainName"domain.com" –Mode DnsTxtRecord 
+ 
+#Confirmar propriedade do domínio com força bruta
+  
+Confirm-msoldomain -Domainname "domain.com" -ForceTakeover Force 
+
+#Resetar senha de usuário, alterar o argumento "false" para não trocar a senha no primeiro acesso
+
+Get-msoluser |set-msoluserpassword -newpassword “password” -forcechangepassword $false
+
+#Criar encaminhamento com cópia de e-mail na Origem(caso não necessário, alterar o parametro true)
+
+Set-Mailbox -Identity "email@origem.com" -DeliverToMailboxAndForward $true -ForwardingSMTPAddress "destino@origem.com"
